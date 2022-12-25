@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 import decode from 'jwt-decode';
 
 import sayLogo from '../../images/say.png';
-import sayText from '../../images/say.png';
+import sayText from '../../images/say2.png';
 import * as actionType from '../../constants/actionTypes';
 import useStyles from './styles';
 
