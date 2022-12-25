@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "node index.js"
   },
   "author": "",
   "license": "ISC",
@@ -15,10 +15,8 @@
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.17.1",
-    "gapi-script": "^1.2.0",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.9.29",
-    "react-google-login": "^5.2.2"
+    "mongoose": "^5.9.29"
   },
   "devDependencies": {
     "nodemon": "^2.0.6"
