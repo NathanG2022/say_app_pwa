@@ -1,5 +1,6 @@
 # Say App PWA
 client: npm install --legacy-peer-deps
+export NODE_OPTIONS=--openssl-legacy-provider
 server: npm install body-parser express mongoose cors nodemon
 https://www.youtube.com/watch?v=VsUzmlZfYNg
 
