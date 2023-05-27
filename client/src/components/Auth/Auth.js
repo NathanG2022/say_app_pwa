@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Avatar, Button, Paper, Grid, Typography, Container } from '@material-ui/core';
-import { useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 // import { GoogleLogin } from 'react-google-login';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 
@@ -48,17 +48,6 @@ const SignUp = () => {
     }
   };
 
-  const handleVerify = async (e) => {
-    e.preventDefault();
-    let newerror;
-    newerror = await dispatch(verify(form, history));
-    if (newerror) {
-      if(newerror.message === "Request failed with status code 401"){
-        setError("Invalid credentials")
-      }
-    }
-  };
-
   // const googleSuccess = async (res) => {
   //   const result = res?.profileObj;
   //   const token = res?.tokenId;
@@ -99,7 +88,7 @@ const SignUp = () => {
           <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
             { isSignup ? 'Sign Up' : 'Sign In' }
           </Button>
-          <Button fullWidth variant="contained" color="primary" onClick={handleVerify}> Register </Button>
+          <Button component={Link} fullWidth variant="contained" color="primary" to="/tos"> Terms </Button>
           {/* <GoogleLogin
             clientId="564033717568-bu2nr1l9h31bhk9bff4pqbenvvoju3oq.apps.googleusercontent.com"
             render={(renderProps) => (
