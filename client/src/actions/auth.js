@@ -9,7 +9,7 @@ export const signin = (formData, router) => async (dispatch) => {
 
     router.push('/');
   } catch (error) {
-    console.log(error);
+    return error;
   }
 };
 
@@ -21,6 +21,20 @@ export const signup = (formData, router) => async (dispatch) => {
 
     router.push('/');
   } catch (error) {
-    console.log(error);
+    return error;
   }
 };
+
+export const verify = (formData, router) => async (dispatch) => {
+  try {
+    const { data } = await api.verify(formData);
+
+    dispatch({ type: AUTH, data });
+
+    router.push('/');
+
+    //return api.getVerify(id);
+  } catch (error) {
+    return error;
+  }
+}

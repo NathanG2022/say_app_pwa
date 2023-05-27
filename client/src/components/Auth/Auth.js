@@ -6,7 +6,7 @@ import { useHistory } from 'react-router-dom';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 
 import Icon from './icon';
-import { signin, signup } from '../../actions/auth';
+import { signin, signup, verify } from '../../actions/auth';
 import { AUTH } from '../../constants/actionTypes';
 import useStyles from './styles';
 import Input from './Input';
@@ -19,7 +19,7 @@ const SignUp = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const classes = useStyles();
-
+  const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const handleShowPassword = () => setShowPassword(!showPassword);
 
@@ -29,13 +29,33 @@ const SignUp = () => {
     setShowPassword(false);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
+    let newerror;
     if (isSignup) {
-      dispatch(signup(form, history));
+      newerror = await dispatch(signup(form, history));
     } else {
-      dispatch(signin(form, history));
+      newerror = await dispatch(signin(form, history));
+    }
+    if (newerror) {
+      if(newerror.message === "Request failed with status code 402"){
+        setError("Please accept the terms and conditions")
+      }else if(newerror.message === "Request failed with status code 401"){
+        setError("Invalid credentials")
+      }else if(newerror.message === "Request failed with status code 403"){
+        setError("Please await verification")
+      }
+    }
+  };
+
+  const handleVerify = async (e) => {
+    e.preventDefault();
+    let newerror;
+    newerror = await dispatch(verify(form, history));
+    if (newerror) {
+      if(newerror.message === "Request failed with status code 401"){
+        setError("Invalid credentials")
+      }
     }
   };
 
@@ -71,6 +91,7 @@ const SignUp = () => {
               <Input name="lastName" label="Last Name" handleChange={handleChange} half />
             </>
             )}
+            <> {error !== '' && <p>Error: {error}</p>} </>
             <Input name="email" label="Email Address" handleChange={handleChange} type="email" />
             <Input name="password" label="Password" handleChange={handleChange} type={showPassword ? 'text' : 'password'} handleShowPassword={handleShowPassword} />
             { isSignup && <Input name="confirmPassword" label="Repeat Password" handleChange={handleChange} type="password" /> }
@@ -78,6 +99,7 @@ const SignUp = () => {
           <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
             { isSignup ? 'Sign Up' : 'Sign In' }
           </Button>
+          <Button fullWidth variant="contained" color="primary" onClick={handleVerify}> Register </Button>
           {/* <GoogleLogin
             clientId="564033717568-bu2nr1l9h31bhk9bff4pqbenvvoju3oq.apps.googleusercontent.com"
             render={(renderProps) => (
