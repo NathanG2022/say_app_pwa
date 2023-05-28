@@ -15,6 +15,8 @@ export const getPost = (id) => async (dispatch) => {
 };
 
 export const getPosts = (page) => async (dispatch) => {
+  const user = JSON.parse(localStorage.getItem('profile'));
+  if (user) {
   try {
     dispatch({ type: START_LOADING });
     const { data: { data, currentPage, numberOfPages } } = await api.fetchPosts(page);
@@ -23,6 +25,9 @@ export const getPosts = (page) => async (dispatch) => {
     dispatch({ type: END_LOADING });
   } catch (error) {
     console.log(error);
+  }
+  } else {
+    dispatch({ type: START_LOADING });
   }
 };
 
