@@ -7,19 +7,26 @@ const router = express.Router();
 
 export const getPosts = async (req, res) => {
     const { page } = req.query;
-    
     try {
         const LIMIT = 8;
         const startIndex = (Number(page) - 1) * LIMIT; // get the starting index of every page
-    
-        const total = await PostMessage.countDocuments({});
-        const posts = await PostMessage.find().sort({ _id: -1 }).limit(LIMIT).skip(startIndex);
 
-        res.json({ data: posts, currentPage: Number(page), numberOfPages: Math.ceil(total / LIMIT)});
-    } catch (error) {    
+        const total = await PostMessage.countDocuments({});
+
+        const posts = await PostMessage.find()
+            .sort({ _id: -1 })
+            .limit(LIMIT)
+            .skip(startIndex);
+
+        res.json({
+            data: posts,
+            currentPage: Number(page),
+            numberOfPages: Math.ceil(total / LIMIT),
+        });
+    } catch (error) {
         res.status(404).json({ message: error.message });
     }
-}
+};
 
 export const getPostsBySearch = async (req, res) => {
     const { searchQuery, tags } = req.query;
@@ -30,17 +37,17 @@ export const getPostsBySearch = async (req, res) => {
         const posts = await PostMessage.find({ $or: [ { title }, { tags: { $in: tags.split(',') } } ]});
 
         res.json({ data: posts });
-    } catch (error) {    
+    } catch (error) {
         res.status(404).json({ message: error.message });
     }
 }
 
-export const getPost = async (req, res) => { 
+export const getPost = async (req, res) => {
     const { id } = req.params;
 
     try {
         const post = await PostMessage.findById(id);
-        
+
         res.status(200).json(post);
     } catch (error) {
         res.status(404).json({ message: error.message });
@@ -64,7 +71,7 @@ export const createPost = async (req, res) => {
 export const updatePost = async (req, res) => {
     const { id } = req.params;
     const { title, message, creator, selectedFile, tags } = req.body;
-    
+
     if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send(`No post with id: ${id}`);
 
     const updatedPost = { creator, title, message, tags, selectedFile, _id: id };
@@ -92,7 +99,7 @@ export const likePost = async (req, res) => {
       }
 
     if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send(`No post with id: ${id}`);
-    
+
     const post = await PostMessage.findById(id);
 
     const index = post.likes.findIndex((id) => id ===String(req.userId));
@@ -120,5 +127,43 @@ export const commentPost = async (req, res) => {
 
     res.json(updatedPost);
 };
+
+export const checkUserRegistered = async (req, res) => {
+    const { userId } = req; // Assuming that the user ID is available in the request object
+
+    try {
+        const user = await UserModal.findById(userId);
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        const isRegistered = user.registered;
+        res.status(200).json({ registered: isRegistered });
+    } catch (error) {
+        res.status(500).json({ message: 'Something went wrong' });
+    }
+};
+
+export const setUserRegistered = async (req, res) => {
+    const { userId } = req.params;
+    const { registered } = req.body;
+
+    try {
+        const user = await UserModal.findById(userId);
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        user.registered = registered;
+        await user.save();
+
+        res.status(200).json({ message: 'User registration status updated successfully' });
+    } catch (error) {
+        res.status(500).json({ message: 'Something went wrong' });
+    }
+};
+
 
 export default router;
