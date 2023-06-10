@@ -7,6 +7,7 @@ const userSchema = mongoose.Schema({
   id: { type: String },
   registered: { type: Boolean, default: false },
   verified: { type: Boolean, default: false },
+  friends: [{ type: mongoose.Types.ObjectId, ref: 'User', default: [] }],
 });
 
 userSchema.methods.setVerified = function(value) {
