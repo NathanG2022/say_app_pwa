@@ -73,3 +73,14 @@ export const verify = async (req, res) => {
   }
 };
 
+export const getUsers = async (req, res) => {
+  //return all user profiles
+  try {
+    const users = await UserModal.find();
+
+    res.status(200).json(users);
+  }
+  catch (error) {
+    res.status(404).json({ message: error.message });
+  }
+};
