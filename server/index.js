@@ -8,7 +8,7 @@ import postRoutes from './routes/posts.js';
 import userRouter from "./routes/user.js";
 
 const app = express();
-dotenv.config({path:'ATT60479.env'});
+dotenv.config({path:'.env'});
 
 app.use(express.json({ limit: '30mb', extended: true }))
 app.use(express.urlencoded({ limit: '30mb', extended: true }))
