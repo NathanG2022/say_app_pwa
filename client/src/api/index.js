@@ -23,3 +23,5 @@ export const verify = (formData) => API.patch(`/user/verify/`,formData);
 export const getVerify = (formData) => API.get(`/user/getVerify/`,formData);
 export const signIn = (formData) => API.post('/user/signin', formData);
 export const signUp = (formData) => API.post('/user/signup', formData);
+export const sendMessage = (formData) => API.post('/messages', formData);
+export const getMessages = () => API.get('/messages');
