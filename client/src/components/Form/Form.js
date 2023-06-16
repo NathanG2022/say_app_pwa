@@ -4,12 +4,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import FileBase from 'react-file-base64';
 import { useHistory } from 'react-router-dom';
 import ChipInput from 'material-ui-chip-input';
-
+import { sendMessage } from '../../api';
 import { createPost, updatePost } from '../../actions/posts';
 import useStyles from './styles';
 
 const Form = ({ currentId, setCurrentId }) => {
   const [postData, setPostData] = useState({ title: '', message: '', tags: [], selectedFile: '' });
+  const [message, setMessage] = useState('');
   const post = useSelector((state) => (currentId ? state.posts.posts.find((message) => message._id === currentId) : null));
   const dispatch = useDispatch();
   const classes = useStyles();
@@ -36,6 +37,15 @@ const Form = ({ currentId, setCurrentId }) => {
       dispatch(updatePost(currentId, { ...postData, name: user?.result?.name }));
       clear();
     }
+  };
+
+  const handleSend = (e) => {
+    e.preventDefault();
+
+    console.log(message);
+
+    dispatch(sendMessage({ ...message}));
+
   };
 
   if (!user?.result?.name) {
@@ -76,6 +86,10 @@ const Form = ({ currentId, setCurrentId }) => {
         <div className={classes.fileInput}><FileBase type="file" multiple={false} onDone={({ base64 }) => setPostData({ ...postData, selectedFile: base64 })} /></div>
         <Button className={classes.buttonSubmit} variant="contained" color="primary" size="large" type="submit" fullWidth>Submit</Button>
         <Button variant="contained" color="secondary" size="small" onClick={clear} fullWidth>Clear</Button>
+      </form>
+      <form autoComplete="off" noValidate className={`${classes.root} ${classes.form}`} onSubmit={handleSend}>
+        <TextField name="chat" variant="outlined" label="Chat" fullWidth value={message} onChange={(e) => setMessage(e.target.value)} />
+        <Button className={classes.buttonSubmit} variant="contained" color="primary" size="large" type="submit" fullWidth>Send</Button>
       </form>
     </Paper>
   );
