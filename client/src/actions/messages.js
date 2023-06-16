@@ -43,6 +43,7 @@ export const getMessages = () => async (dispatch) => {
 }
 
 export const sendMessage = (message) => async (dispatch) => {
+    const user = JSON.parse(localStorage.getItem('profile'));
     try {
         const { data } = await api.sendMessage(message);
 
