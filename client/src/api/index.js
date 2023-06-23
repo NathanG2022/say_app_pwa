@@ -26,4 +26,4 @@ export const signUp = (formData) => API.post('/user/signup', formData);
 //router.get('/', getMessages);
 //router.post('/send', sendMessage);
 export const sendMessage = (message) => API.post(`/messages/send`, message);
-export const getMessages = (message) => API.get(`/messages/`, message);
+export const getMessages = (message) => API.get(`/messages/get`, message);
