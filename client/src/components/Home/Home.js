@@ -7,6 +7,7 @@ import ChipInput from 'material-ui-chip-input';
 import { getPostsBySearch } from '../../actions/posts';
 import Posts from '../Posts/Posts';
 import Form from '../Form/Form';
+import Messages from '../Form/Messages';
 import Pagination from '../Pagination';
 import useStyles from './styles';
 
@@ -66,6 +67,8 @@ const Home = () => {
               <Button onClick={searchPost} className={classes.searchButton} variant="contained" color="primary">Search</Button>
             </AppBar>
             <Form currentId={currentId} setCurrentId={setCurrentId} />
+            {/* Messages Appbar */}
+            <Messages />
             {(!searchQuery && !tags.length) && (
               <Paper className={classes.pagination} elevation={6}>
                 <Pagination page={page} />

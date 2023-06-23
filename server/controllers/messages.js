@@ -2,6 +2,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 
 import Message from '../models/messages.js';
+import UserModal from '../models/user.js';
 
 const router = express.Router();
 /*
@@ -21,8 +22,7 @@ const messageSchema = new mongoose.Schema({
 export const getMessages = async (req, res) => {
     if (!req.userId) return res.json({ message: "Unauthenticated" });
     try{
-        const fetchedmessages = await messages.find();
-
+        const fetchedmessages = await Message.find();
         res.status(200).json(fetchedmessages);
     }
     catch (error) {
@@ -34,8 +34,8 @@ export const sendMessage = async (req, res) => {
     if (!req.userId) return res.json({ message: "Unauthenticated" });
     const message = req.body;
     const output = Object.values(message).join('');
-    const newMessage = new Message({...message,  content: output, author: req.userId, date: new Date().toISOString() });
-
+    const user = await UserModal.findById(req.userId);
+    const newMessage = new Message({...message,  content: output, author: req.userId, date: new Date().toISOString(), userName: user.name});
     try {
         await newMessage.save();
 

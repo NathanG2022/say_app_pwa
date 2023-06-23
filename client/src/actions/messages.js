@@ -1,5 +1,5 @@
 import * as api from '../api/index.js';
-import { FETCH_MESSAGES , SEND_MESSAGE } from '../constants/actionTypes';
+import { FETCH_MESSAGES , SEND_MESSAGE , END_LOADING , START_LOADING } from '../constants/actionTypes.js';
 /*
 export const getMessages = async (req, res) => {
     if (!req.userId) return res.json({ message: "Unauthenticated" });
@@ -34,20 +34,29 @@ export const sendMessage = async (req, res) => {
 
 export const getMessages = () => async (dispatch) => {
     try {
-        const { data } = await api.fetchMessages();
 
-        dispatch({ type: FETCH_MESSAGES, payload: data });
+        dispatch({ type: START_LOADING });
+
+        const { data } = await api.getMessages();
+
+        dispatch({ type: FETCH_MESSAGES, payload: response.data });
+
+        dispatch({ type: END_LOADING });
     } catch (error) {
         console.log(error);
     }
 }
 
 export const sendMessage = (message) => async (dispatch) => {
-    const user = JSON.parse(localStorage.getItem('profile'));
     try {
+
+        dispatch({ type: START_LOADING });
+
         const { data } = await api.sendMessage(message);
 
-        dispatch({ type: SEND_MESSAGE, payload: data });
+        dispatch({ type: SEND_MESSAGE, payload: response.data });
+
+        dispatch({ type: END_LOADING });
     } catch (error) {
         console.log(error);
     }
