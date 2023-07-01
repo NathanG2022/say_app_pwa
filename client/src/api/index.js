@@ -7,10 +7,11 @@ API.interceptors.request.use((req) => {
   if (localStorage.getItem('profile')) {
     req.headers.Authorization = `Bearer ${JSON.parse(localStorage.getItem('profile')).token}`;
   }
-
   return req;
 });
 
+export const fetchDirectMessages = () => API.get(`/directMessages`);
+export const sendDirectMessage = (receiverId,message) => API.post(`/directMessages/send/${receiverId}`, message);
 export const fetchPost = (id) => API.get(`/posts/${id}`);
 export const fetchPosts = (page) => API.get(`/posts?page=${page}`);
 export const fetchPostsBySearch = (searchQuery) => API.get(`/posts/search?searchQuery=${searchQuery.search || 'none'}&tags=${searchQuery.tags}`);
@@ -23,7 +24,8 @@ export const verify = (formData) => API.patch(`/user/verify/`,formData);
 export const getVerify = (formData) => API.get(`/user/getVerify/`,formData);
 export const signIn = (formData) => API.post('/user/signin', formData);
 export const signUp = (formData) => API.post('/user/signup', formData);
+export const getUsers = () => API.get(`/messages/getUsers`);
 //router.get('/', getMessages);
 //router.post('/send', sendMessage);
 export const sendMessage = (message) => API.post(`/messages/send`, message);
-export const getMessages = (message) => API.get(`/messages/get`, message);
+export const getMessages = (startindex,endindex) => API.get(`/messages/get/${startindex}/${endindex}`);

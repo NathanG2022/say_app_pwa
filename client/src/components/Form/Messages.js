@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { TextField, Button, Typography, Paper } from '@material-ui/core';
-import { useDispatch } from 'react-redux';
-import { sendMessage, getMessages } from '../../api';
+import { useDispatch, useSelector } from 'react-redux';
+import { sendMessage, getMessages, getUsers } from '../../api';
 import useStyles from './styles';
 
 function combineMessages(messages) {
@@ -36,6 +36,9 @@ const MessageComponent = ({ message }) => (
 const Messages = () => {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
+  const [oldMessageNumber, setOldMessageNumber] = useState(0);
+  const [loading, setLoading] = useState(false); // Track loading status
+  const [numberofMessages, setNumberofMessages] = useState(0);
   const dispatch = useDispatch();
   const classes = useStyles();
   const messagesRef = useRef(null);
@@ -45,39 +48,32 @@ const Messages = () => {
 
     console.log(message);
 
-    dispatch(sendMessage({ content: message }));
+    sendMessage({ content: message });
     setMessage(''); // Clear the message input field after sending
   };
 
   useEffect(() => {
-    const fetchMessages = async () => {
-      try {
-        const { data } = await getMessages();
-        setMessages(combineMessages(data));
-      } catch (error) {
-        console.log(error);
-      }
-    };
+    // Only send new getMessages request when the previous one completes
+    if (!loading) {
+      const fetchMessages = async () => {
+        try {
+          setLoading(true); // Set loading status to true
+          const { data } = await getMessages(0,10);
+          setMessages(combineMessages(data));
+        } catch (error) {
+          console.log(error);
+        } finally {
+          setLoading(false); // Set loading status to false after completion
+        }
+      };
 
-    fetchMessages();
-
-    const intervalId = setInterval(fetchMessages, 100); // Refresh every 3 seconds
-
-    // Clean up function
-    return () => clearInterval(intervalId);
-  }, []);
-
-  const numberofMessages = messages.length;
-   
-  useEffect(() => {
-    //if messages length > numberofMessages scroll to bottom
-    if (messages.length > numberofMessages) {
-      if (messagesRef.current) {
-        const { scrollHeight, clientHeight } = messagesRef.current;
-        messagesRef.current.scrollTop = scrollHeight - clientHeight;
-      }
+      fetchMessages();
     }
-      
+  }, [loading]);
+
+  useEffect(() => {
+    const { scrollHeight, clientHeight } = messagesRef.current;
+    messagesRef.current.scrollTop = scrollHeight - clientHeight;
   }, [messages]);
 
   return (
@@ -85,11 +81,9 @@ const Messages = () => {
       <form autoComplete="off" noValidate className={`${classes.root} ${classes.form}`} onSubmit={handleSend}>
         <Typography variant="h6">Messages:</Typography>
         <div className={classes.messagesContainer} ref={messagesRef}>
-          {
-            messages.map((message, index) => (
-              <MessageComponent message={message} key={index} />
-            ))
-          }
+          {messages.map((message, index) => (
+            <MessageComponent message={message} key={index} />
+          ))}
         </div>
         <TextField name="chat" variant="outlined" label="Chat" fullWidth value={message} onChange={(e) => setMessage(e.target.value)} />
         <Typography variant="h6">Send a Message</Typography>

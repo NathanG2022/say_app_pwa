@@ -1,17 +1,28 @@
 import * as actionTypes from '../constants/actionTypes';
 
-const messageReducer = (messages = [], action) => {
+export default (state = { isLoading: true, messages: [] }, action) => {
     switch (action.type) {
         case actionTypes.START_LOADING:
-            return { ...messages, isLoading: true };
+            return { ...state, isLoading: true };
         case actionTypes.END_LOADING:
-            return { ...messages, isLoading: false };
+            return { ...state, isLoading: false };
         case actionTypes.FETCH_MESSAGES:
-            return action.payload;
+            return {
+                ...state,
+                messages: action.payload.data,
+            }
         case actionTypes.SEND_MESSAGE:
-            return [...messages, action.payload];
+            return {
+                ...state,
+                messages: [...state.messages, action.payload.data],
+            }
+        case actionTypes.FETCH_USERS:
+            return {
+                ...state,
+                users: action.payload.data,
+            }
         default:
-            return messages;
+            return state;
     }
 }
-export default messageReducer;
+        
