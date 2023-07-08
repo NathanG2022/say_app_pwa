@@ -5,6 +5,7 @@ import { sendMessage, getMessages, getUsers } from '../../api';
 import useStyles from './styles';
 
 function combineMessages(messages) {
+  
   let previousAuthor = null;
   const messageComponents = [];
 
