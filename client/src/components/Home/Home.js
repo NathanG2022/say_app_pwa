@@ -11,8 +11,7 @@ import Messages from '../Form/Messages';
 import Pagination from '../Pagination';
 import useStyles from './styles';
 import DirectMessageForm from '../Form/DirectMessageForm';
-import DirectMessageList from '../Form/DirectMessageList';
-
+import WebSocket from 'ws';
 function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
@@ -87,7 +86,6 @@ const Home = () => {
                 <Pagination page={page} />
               </Paper>
             )}
-            <DirectMessageList />
             <DirectMessageForm />
           </Grid>
         </Grid>

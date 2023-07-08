@@ -11,10 +11,13 @@ import userRouter from "./routes/user.js";
 import helmet from "helmet";
 import xss from "xss-clean";
 import mongoSanitize from "express-mongo-sanitize";
+import { WebSocketServer } from 'ws';
+
 import http from "http";
 
-
+// Create a new WebSocket server
 const app = express();
+const server = http.createServer(app);
 dotenv.config({path:'.env'});
 
 app.use(express.json({ limit: '30mb', extended: true }))
@@ -34,11 +37,30 @@ app.get('/', (req, res) => {
 
 // const server = http.createServer(app);
 // socketServer.registerSocketServer(server);
+const wss = new WebSocketServer({ server });
 
-const PORT = process.env.PORT|| 5000;
+wss.on('connection', (ws) => {
+  // Handle WebSocket connection
+  ws.on('message', (message) => {
+    // Handle incoming WebSocket message
+  });
 
-mongoose.connect(process.env.CONNECTION_URL, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => app.listen(PORT, () => console.log(`Server Running on Port: http://localhost:${PORT}`)))
-    .catch((error) => console.log(`${error} did not connect`));
+  // Send a WebSocket message
+  ws.send('WebSocket connection established.');
+  console.log('WebSocket connection established.');
+});
+
+const PORT = process.env.PORT || 5000;
+
+mongoose
+  .connect(process.env.CONNECTION_URL, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => {
+    server.listen(PORT, () => {
+      console.log(`Server Running on Port: http://localhost:${PORT}`);
+    });
+  })
+  .catch((error) => {
+    console.log(`${error} did not connect`);
+  });
 
 mongoose.set('useFindAndModify', false);

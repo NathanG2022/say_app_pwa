@@ -3,6 +3,38 @@ import axios from 'axios';
 const API = axios.create({ baseURL: 'http://localhost:5000' });
 // const API = axios.create({ baseURL: 'https://connect-app-pwa.herokuapp.com/' });
 
+
+// Create a WebSocket connection
+const socket = new WebSocket('ws://localhost:5000');
+
+// Event listener for when the WebSocket connection is established
+socket.addEventListener('open', () => {
+  console.log('WebSocket connection established.');
+
+  // Send a message to the WebSocket server
+  socket.send('Hello, WebSocket server!');
+});
+
+// Event listener for incoming messages from the WebSocket server
+socket.addEventListener('message', (event) => {
+  const message = event.data;
+  console.log('Received message:', message);
+
+  // Handle the WebSocket message as needed
+  // For example, you can update the UI or trigger a callback function
+});
+
+// Event listener for when the WebSocket connection is closed
+socket.addEventListener('close', (event) => {
+  console.log('WebSocket connection closed with code:', event.code);
+});
+
+// Event listener for WebSocket errors
+socket.addEventListener('error', (error) => {
+  console.error('WebSocket error:', error);
+});
+
+
 API.interceptors.request.use((req) => {
   if (localStorage.getItem('profile')) {
     req.headers.Authorization = `Bearer ${JSON.parse(localStorage.getItem('profile')).token}`;

@@ -39,7 +39,7 @@ const DirectMessageList = () => {
         <div className={classes.messagesContainer} ref={messagesRef}>
             {Object.entries(messages).map(([authorId, { userName, messages }]) => (
                 <div key={authorId}>
-                    <button onClick={() => setSelectedUser(authorId)}>{userName}</button>
+                    <button onClick={() => setSelectedUser(authorId)} variant="contained" color="primary" size="large" type="submit" fullWidth>{userName}</button>
                     {selectedUser === authorId && messages.map((message, index) => (
                         <p key={index}>Content: {message}</p>
                     ))}
