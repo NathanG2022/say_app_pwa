@@ -67,30 +67,38 @@ const Messages = () => {
         }
       };
 
-      fetchMessages();
+      // Fetch messages every 3 seconds
+      const interval = setInterval(fetchMessages, 3000);
+
+      return () => {
+        clearInterval(interval); // Clean up the interval on component unmount
+      };
     }
   }, [loading]);
 
-  useEffect(() => {
-    const { scrollHeight, clientHeight } = messagesRef.current;
-    messagesRef.current.scrollTop = scrollHeight - clientHeight;
-  }, [messages]);
+  // useEffect(() => {
+  //   const { scrollHeight, clientHeight } = messagesRef.current;
+  //   messagesRef.current.scrollTop = scrollHeight - clientHeight;
+  // }, [messages]);
 
   return (
-    <Paper className={classes.paper}>
-      <form autoComplete="off" noValidate className={`${classes.root} ${classes.form}`} onSubmit={handleSend}>
-        <Typography variant="h6">Messages:</Typography>
-        <div className={classes.messagesContainer} ref={messagesRef}>
-          {messages.map((message, index) => (
-            <MessageComponent message={message} key={index} />
-          ))}
-        </div>
-        <TextField name="chat" variant="outlined" label="Chat" fullWidth value={message} onChange={(e) => setMessage(e.target.value)} />
-        <Typography variant="h6">Send a Message</Typography>
-        <Button className={classes.buttonSubmit} variant="contained" color="primary" size="large" type="submit" fullWidth>Send</Button>
-      </form>
-    </Paper>
+    <div className={classes.container}>
+      <Paper className={classes.paper}>
+        <form autoComplete="off" noValidate className={`${classes.root} ${classes.form}`} onSubmit={handleSend}>
+          <Typography variant="h6">Global Chat:</Typography>
+          <div className={classes.messagesContainer} ref={messagesRef}>
+            {messages.map((message, index) => (
+              <MessageComponent message={message} key={index} />
+            ))}
+          </div>
+          <Typography variant="h6">Send a Message</Typography>
+          <TextField name="chat" variant="outlined" label="Chat" fullWidth value={message} onChange={(e) => setMessage(e.target.value)} />
+          <Button className={classes.buttonSubmit} variant="contained" color="primary" size="large" type="submit" fullWidth>Send</Button>
+        </form>
+      </Paper>
+    </div>
   );
+  
 };
 
 export default Messages;

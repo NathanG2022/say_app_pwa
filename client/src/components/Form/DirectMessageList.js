@@ -1,28 +1,51 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { useEffect, useState, useRef } from 'react';
+import { fetchDirectMessages } from '../../api';
+import useStyles from './styles';
 
-const DirectMessageList = ({ senderId, receiverId }) => {
-    const [messages, setMessages] = useState([]);
+const DirectMessageList = () => {
+    const classes = useStyles();
+    const [messages, setMessages] = useState({});
+    const [selectedUser, setSelectedUser] = useState(null);
+    const messagesRef = useRef(null);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        const fetchMessages = async () => {
-            try {
-                const res = await axios.get(`/directMessages/${senderId}/${receiverId}`);
-                setMessages(res.data);
-            } catch (error) {
-                console.error(error);
-            }
-        };
-
-        fetchMessages();
-    }, [senderId, receiverId]);
+        if (!loading) {
+            const getDirectMessages = async () => {
+                try {
+                    const res = await fetchDirectMessages();
+                    console.log(res.data);
+                    const groupedMessages = res.data.reduce((acc, message) => {
+                        if (!acc[message.author]) {
+                            acc[message.author] = {
+                                userName: message.userName,
+                                messages: []
+                            };
+                        }
+                        acc[message.author].messages.push(message.content);
+                        return acc;
+                    }, {});
+                    setMessages(groupedMessages);
+                    setLoading(false);
+                } catch (error) {
+                    console.error(error);
+                }
+            };
+            getDirectMessages();
+        }
+    }, [loading]);
 
     return (
-        <ul>
-            {messages.map((message) => (
-                <li key={message._id}>{message.text}</li>
+        <div className={classes.messagesContainer} ref={messagesRef}>
+            {Object.entries(messages).map(([authorId, { userName, messages }]) => (
+                <div key={authorId}>
+                    <button onClick={() => setSelectedUser(authorId)}>{userName}</button>
+                    {selectedUser === authorId && messages.map((message, index) => (
+                        <p key={index}>Content: {message}</p>
+                    ))}
+                </div>
             ))}
-        </ul>
+        </div>
     );
 };
 
