@@ -5,13 +5,12 @@ import DirectMessage from "../models/directmessages.js";
 const router = express.Router();
 
 export const getDirectMessages = async (req, res) => {
-
+    if (!req.userId) return res.json({ message: "Unauthenticated" });
+    const receiverId = req.userId;
     try {
         const messages = await DirectMessage.find({
-            sender: senderId,
-            receiver: receiverId
+            recipient: receiverId
         });
-
         res.status(200).json(messages);
     } catch (error) {
         res.status(500).json({ error: error.toString() });
@@ -30,6 +29,7 @@ export const createDirectMessage = async (req, res) => {
             author: author1,
             recipient: receiver,
             content: output,
+            userName: author1.name,
         });
 
         await newMessage.save();
