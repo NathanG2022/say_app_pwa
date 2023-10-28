@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const API = axios.create({ baseURL: 'http://connect-app-pwa.herokuapp.com/' });
+const API = axios.create({ baseURL: 'https://connect-app-server-e35ab82edc03.herokuapp.com/' });
+// const API = axios.create({ baseURL: 'http://localhost:5000' });
 // const API = axios.create({ baseURL: 'https://connect-app-pwa.herokuapp.com/' });
 
 
