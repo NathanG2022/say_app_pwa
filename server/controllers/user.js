@@ -16,9 +16,9 @@ export const signin = async (req, res) => {
 
     if (!isPasswordCorrect) return res.status(401).json({ message: "Invalid credentials" });
 
-    else if (!oldUser.verified) return res.status(402).json({ message: "User not verified" });
+    // else if (!oldUser.verified) return res.status(402).json({ message: "User not verified" });
 
-    else if (!oldUser.registered) return res.status(403).json({ message: "User not registered" });
+    // else if (!oldUser.registered) return res.status(403).json({ message: "User not registered" });
 
     const token = jwt.sign({ email: oldUser.email, id: oldUser._id }, secret, { expiresIn: "1h" });
 

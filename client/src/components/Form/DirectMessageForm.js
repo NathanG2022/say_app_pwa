@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { sendDirectMessage, getDirectMessages, getUsers } from '../../api';
 import useStyles from './styles';
 import DirectMessageList from './DirectMessageList';
+import Messages from './Messages';
 
 const DirectMessageForm = ({ receiverId }) => {
   const [text, setText] = useState('');
@@ -42,6 +43,8 @@ const DirectMessageForm = ({ receiverId }) => {
   return (
     <div className={classes.container}>
       <Paper className={classes.paper}>
+        <Typography variant="h4" gutterBottom>Global Messages</Typography>
+        <Messages type="global" /> {/* Ensure this component can handle global messages */}
         <form autoComplete="off" noValidate className={`${classes.root} ${classes.form}`} onSubmit={handleSubmit}>
           <Typography variant="h6">Direct Message</Typography>
           <DirectMessageList />

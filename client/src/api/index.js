@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-const API = axios.create({ baseURL: 'https://say-app-pwa-server-3da24f22cc4a.herokuapp.com/' });
+// const API = axios.create({ baseURL: 'https://say-app-pwa-server-3da24f22cc4a.herokuapp.com/' });
 // const API = axios.create({ baseURL: 'https://connect-app-server-e35ab82edc03.herokuapp.com/' }); // this is the old deleted heroku BE
-// const API = axios.create({ baseURL: 'http://localhost:5000' }); // this is to use local BE
+const API = axios.create({ baseURL: 'http://localhost:5000' }); // this is to use local BE
 
 
 
