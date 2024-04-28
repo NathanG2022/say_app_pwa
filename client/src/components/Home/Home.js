@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Container, Grow, Grid, AppBar, TextField, Button, Paper } from '@material-ui/core';
+import { Container, Grow, Grid, AppBar, TextField, Button, Paper, Modal, Backdrop, Fade, IconButton  } from '@material-ui/core';
+import CloseIcon from '@material-ui/icons/Close';
 import { useDispatch } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
 import ChipInput from 'material-ui-chip-input';
@@ -21,13 +22,14 @@ const Home = () => {
   const query = useQuery();
   const page = query.get('page') || 1;
   const searchQuery = query.get('searchQuery');
-
   const [currentId, setCurrentId] = useState(0);
   const dispatch = useDispatch();
-
   const [search, setSearch] = useState('');
   const [tags, setTags] = useState([]);
   const history = useHistory();
+  const [open, setOpen] = useState(false);  // Modal open state
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   const searchPost = () => {
     if (search.trim() || tags.length > 0) {
@@ -45,7 +47,6 @@ const Home = () => {
   };
 
   const handleAddChip = (tag) => setTags([...tags, tag]);
-
   const handleDeleteChip = (chipToDelete) => setTags(tags.filter((tag) => tag !== chipToDelete));
 
   return (
@@ -56,6 +57,11 @@ const Home = () => {
             <Posts setCurrentId={setCurrentId} />
           </Grid>
           <Grid item xs={12} sm={5} md={3}>
+          	<AppBar className={classes.appBarSearch} position="static" color="inherit">
+            	<Button onClick={handleOpen} className={classes.searchButton} variant="contained" color="primary">
+              	Message Center
+            	</Button>
+          	</AppBar>
             <AppBar className={classes.appBarSearch} position="static" color="inherit">
               <TextField
                 onKeyDown={handleKeyPress}
@@ -79,16 +85,32 @@ const Home = () => {
               </Button>
             </AppBar>
             <Form currentId={currentId} setCurrentId={setCurrentId} />
-            {/* Messages Appbar */}
-            <Messages />
             {(!searchQuery && tags.length === 0) && (
               <Paper className={classes.pagination} elevation={6}>
                 <Pagination page={page} />
               </Paper>
             )}
-            <DirectMessageForm />
           </Grid>
         </Grid>
+				<Modal
+        	open={open}
+        	onClose={handleClose}
+        	closeAfterTransition
+        	BackdropComponent={Backdrop}
+        	BackdropProps={{
+          	timeout: 500,
+        	}}
+      	>
+        	<Fade in={open}>
+          	<div className={classes.modal}>
+            	<IconButton className={classes.closeButton} onClick={handleClose}>
+              	<CloseIcon />
+            	</IconButton>
+							{/* post.creator*/}
+            	<DirectMessageForm receiverId={null} handleClose={handleClose} />
+          	</div>
+        	</Fade>
+      	</Modal>
       </Container>
     </Grow>
   );
