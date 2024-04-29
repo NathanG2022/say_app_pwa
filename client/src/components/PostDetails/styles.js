@@ -1,12 +1,16 @@
 import { makeStyles } from '@material-ui/core/styles';
 
 export default makeStyles((theme) => ({
+  paper: { // This is the new style for the Paper component
+    position: 'relative', // Relative positioning is needed for the closeButton
+    padding: '20px',
+    borderRadius: '15px',
+  },
   media: {
     borderRadius: '20px',
     objectFit: 'cover',
     width: '100%',
     maxHeight: '600px',
-
   },
   card: {
     display: 'flex',
@@ -52,8 +56,8 @@ export default makeStyles((theme) => ({
   },
   closeButton: {
     position: 'absolute',
-    right: theme.spacing(1),
-    top: theme.spacing(1),
+    right: theme.spacing(-1),
+    top: theme.spacing(-1),
     color: theme.palette.grey[500],
   },
   modal: {
@@ -61,11 +65,13 @@ export default makeStyles((theme) => ({
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: 600, // adjust as needed
+    width: 'auto',
+    maxWidth: '90%',
     backgroundColor: theme.palette.background.paper,
     border: '2px solid #000',
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
     outline: 'none',
+    overflow: 'hidden',
   },
 }));

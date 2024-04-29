@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { AppBar, Typography, Toolbar, Avatar, Button } from '@material-ui/core';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
@@ -16,7 +16,8 @@ const Navbar = () => {
   const history = useHistory();
   const classes = useStyles();
 
-  const logout = () => {
+  // Wrap the logout function with useCallback
+  const logout = useCallback(() => {
     dispatch({ type: actionType.LOGOUT });
 
     history.push('/auth');
@@ -26,7 +27,7 @@ const Navbar = () => {
     localStorage.clear();
 
     window.location.reload();
-  };
+  }, [dispatch, history]);
 
   useEffect(() => {
     const token = user?.token;
@@ -34,11 +35,14 @@ const Navbar = () => {
     if (token) {
       const decodedToken = decode(token);
 
+      // if the token is expired, perform logout
       if (decodedToken.exp * 1000 < new Date().getTime()) logout();
     }
 
     setUser(JSON.parse(localStorage.getItem('profile')));
-  }, [location]);
+
+    // Ensure to listen to changes in location and logout function
+  }, [location, logout, user.token]);
 
   return (
     <AppBar className={classes.appBar} position="static" color="inherit">

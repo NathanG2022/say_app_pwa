@@ -1,5 +1,5 @@
 import React from 'react';
-import { verify } from '../../actions/auth';
+// import { verify } from '../../actions/auth';
 import Input from '../Auth/Input';
 
 const TermsOfServicePage = ({ handleAccept }) => {
