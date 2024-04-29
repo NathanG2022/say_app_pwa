@@ -8,10 +8,9 @@ import ChipInput from 'material-ui-chip-input';
 import { getPostsBySearch } from '../../actions/posts';
 import Posts from '../Posts/Posts';
 import Form from '../Form/Form';
-import Messages from '../Form/Messages';
 import Pagination from '../Pagination';
 import useStyles from './styles';
-import DirectMessageForm from '../Form/DirectMessageForm';
+import MessageCenterForm from '../Form/MessageCenterForm';
 import WebSocket from 'ws';
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -107,7 +106,7 @@ const Home = () => {
               	<CloseIcon />
             	</IconButton>
 							{/* post.creator*/}
-            	<DirectMessageForm receiverId={null} handleClose={handleClose} />
+            	<MessageCenterForm receiverId={null} handleClose={handleClose} />
           	</div>
         	</Fade>
       	</Modal>

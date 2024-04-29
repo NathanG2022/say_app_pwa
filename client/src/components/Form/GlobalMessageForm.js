@@ -34,7 +34,7 @@ const MessageComponent = ({ message }) => (
   </div>
 );
 
-const Messages = () => {
+const GlobalMessageForm = () => {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
   const [oldMessageNumber, setOldMessageNumber] = useState(0);
@@ -102,4 +102,4 @@ const Messages = () => {
   
 };
 
-export default Messages;
+export default GlobalMessageForm;

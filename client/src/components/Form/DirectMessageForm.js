@@ -1,87 +1,52 @@
-import React, { useState, useEffect } from 'react';
-import { TextField, Button, Typography, Paper, Select, MenuItem } from '@material-ui/core';
-import { useDispatch, useSelector } from 'react-redux';
-import { sendDirectMessage, getDirectMessages, getUsers } from '../../api';
+import React, { useEffect, useState, useRef } from 'react';
+import { fetchDirectMessages } from '../../api';
 import useStyles from './styles';
-import DirectMessageList from './DirectMessageList';
-import Messages from './Messages';
 
-const DirectMessageForm = ({ receiverId }) => {
-  const [text, setText] = useState('');
-  const [recipient, setRecipient] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [users, setUsers] = useState([]);
-  const classes = useStyles();
+const DirectMessageForm = () => {
+    const classes = useStyles();
+    const [messages, setMessages] = useState({});
+    const [selectedUser, setSelectedUser] = useState(null);
+    const messagesRef = useRef(null);
+    const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const res = await getUsers();
-        setUsers(res.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
+    useEffect(() => {
+        if (!loading) {
+            const getDirectMessages = async () => {
+                try {
+                    const res = await fetchDirectMessages();
+                    console.log(res.data);
+                    const groupedMessages = res.data.reduce((acc, message) => {
+                        if (!acc[message.author]) {
+                            acc[message.author] = {
+                                userName: message.userName,
+                                messages: []
+                            };
+                        }
+                        acc[message.author].messages.push(message.content);
+                        return acc;
+                    }, {});
+                    setMessages(groupedMessages);
+                    setLoading(false);
+                } catch (error) {
+                    console.error(error);
+                }
+            };
+            getDirectMessages();
+        }
+    }, [loading]);
 
-    const interval = setInterval(fetchUsers, 3000); // Fetch users every 3 seconds
-
-    return () => {
-      clearInterval(interval); // Cleanup the interval on component unmount
-    };
-  }, []);
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    try {
-      await sendDirectMessage(recipient, { content: text });
-      setText('');
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  return (
-    <div className={classes.container}>
-      <Paper className={classes.paper}>
-        <Typography variant="h4" gutterBottom>Global Messages</Typography>
-        <Messages type="global" /> {/* Ensure this component can handle global messages */}
-        <form autoComplete="off" noValidate className={`${classes.root} ${classes.form}`} onSubmit={handleSubmit}>
-          <Typography variant="h6">Direct Message</Typography>
-          <DirectMessageList />
-          
-          <div className={classes.users}>
-            <Select value={recipient} onChange={(event) => setRecipient(event.target.value)}>
-              <MenuItem value="">Select a recipient</MenuItem>
-              {users.map((user) => (
-                <MenuItem key={user._id} value={user._id}>
-                  {user.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </div>
-          
-          <TextField
-            name="message"
-            variant="outlined"
-            label="Message"
-            fullWidth
-            value={text}
-            onChange={(event) => setText(event.target.value)}
-          />
-          <Button
-            className={classes.buttonSubmit}
-            variant="contained"
-            color="primary"
-            size="large"
-            type="submit"
-            fullWidth
-          >
-            Send
-          </Button>
-        </form>
-      </Paper>
-    </div>
-  );
+    return (
+        <div className={classes.messagesContainer} ref={messagesRef}>
+            {Object.entries(messages).map(([authorId, { userName, messages }]) => (
+                <div key={authorId}>
+                    <button onClick={() => setSelectedUser(authorId)} variant="contained" color="primary" size="large" type="submit" fullWidth>{userName}</button>
+                    {selectedUser === authorId && messages.map((message, index) => (
+                        <p key={index}>Content: {message}</p>
+                    ))}
+                </div>
+            ))}
+        </div>
+    );
 };
 
 export default DirectMessageForm;
