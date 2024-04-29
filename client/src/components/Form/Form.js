@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { TextField, Button, Typography, Paper } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import FileBase from 'react-file-base64';
@@ -15,15 +15,16 @@ const Form = ({ currentId, setCurrentId }) => {
   const user = JSON.parse(localStorage.getItem('profile'));
   const history = useHistory();
 
-  const clear = () => {
+  // Using useCallback to memoize the clear function
+  const clear = useCallback(() => {
     setCurrentId(0);
     setPostData({ title: '', message: '', tags: [], selectedFile: '' });
-  };
+  }, [setCurrentId]);
 
   useEffect(() => {
     if (!post?.title) clear();
     if (post) setPostData(post);
-  }, [post]);
+  }, [post, clear]);  // clear is now stable and won't cause re-runs unless necessary
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -55,7 +56,6 @@ const Form = ({ currentId, setCurrentId }) => {
     setPostData({ ...postData, tags: postData.tags.filter((tag) => tag !== chipToDelete) });
   };
 
-
   return (
     <Paper className={classes.paper} elevation={6}>
       <form autoComplete="off" noValidate className={`${classes.root} ${classes.form}`} onSubmit={handleSubmit}>
@@ -77,7 +77,6 @@ const Form = ({ currentId, setCurrentId }) => {
         <Button className={classes.buttonSubmit} variant="contained" color="primary" size="large" type="submit" fullWidth>Submit</Button>
         <Button variant="contained" color="secondary" size="small" onClick={clear} fullWidth>Clear</Button>
       </form>
-
     </Paper>
   );
 };

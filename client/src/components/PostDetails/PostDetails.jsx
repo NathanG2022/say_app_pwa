@@ -9,7 +9,7 @@ import CommentSection from './CommentSection';
 import useStyles from './styles';
 import MessageCenterForm from '../Form/MessageCenterForm'; // Assuming this path is correct
 
-const Post = () => {
+const PostDetails = () => {
   const { post, posts, isLoading } = useSelector((state) => state.posts);
   const dispatch = useDispatch();
   const history = useHistory();
@@ -19,7 +19,7 @@ const Post = () => {
 
   useEffect(() => {
     dispatch(getPost(id));
-  }, [id]);
+  }, [id, dispatch]);
 
   useEffect(() => {
     if (post) {
@@ -27,7 +27,7 @@ const Post = () => {
         getPostsBySearch({ search: "none", tags: post?.tags.join(",") })
       );
     }
-  }, [post]);
+  }, [post, dispatch]);
 
   const handleOpen = () => {
     setOpen(true);
@@ -52,7 +52,10 @@ const Post = () => {
   const recommendedPosts = posts.filter(({ _id }) => _id !== post._id);
 
   return (
-    <Paper style={{ padding: "20px", borderRadius: "15px" }} elevation={6}>
+    <Paper className={classes.paper} elevation={6}>
+      <IconButton className={classes.closeButton} onClick={() => history.goBack()}>
+        <CloseIcon />
+      </IconButton>
       <div className={classes.card}>
         <div className={classes.section}>
           <Typography variant="h3" component="h2">
@@ -147,4 +150,4 @@ const Post = () => {
   );
 };
 
-export default Post;
+export default PostDetails;

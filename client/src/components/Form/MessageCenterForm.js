@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { TextField, Button, Typography, Paper, Select, MenuItem } from '@material-ui/core';
-import { useDispatch, useSelector } from 'react-redux';
-import { sendDirectMessage, getDirectMessages, getUsers } from '../../api';
+import { sendMessage, getUsers } from '../../api';
 import useStyles from './styles';
 import DirectMessageForm from './DirectMessageForm';
 import GlobalMessageForm from './GlobalMessageForm';
@@ -9,7 +8,6 @@ import GlobalMessageForm from './GlobalMessageForm';
 const MessageCenterForm = ({ receiverId }) => {
   const [text, setText] = useState('');
   const [recipient, setRecipient] = useState('');
-  const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState([]);
   const classes = useStyles();
 
@@ -33,7 +31,7 @@ const MessageCenterForm = ({ receiverId }) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      await sendDirectMessage(recipient, { content: text });
+      await sendMessage(recipient, { content: text });
       setText('');
     } catch (error) {
       console.error(error);

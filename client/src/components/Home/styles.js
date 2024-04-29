@@ -19,8 +19,8 @@ export default makeStyles((theme) => ({
   },
   closeButton: {
     position: 'absolute',
-    right: theme.spacing(1),
-    top: theme.spacing(1),
+    right: theme.spacing(-1),
+    top: theme.spacing(-1),
     color: theme.palette.grey[500],
   },
   modal: {
@@ -28,11 +28,13 @@ export default makeStyles((theme) => ({
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: 600, // adjust as needed
+    width: 'auto', // Adjust width based on screen size
+    maxWidth: '90%', // Ensures that modal does not exceed the screen width
     backgroundColor: theme.palette.background.paper,
     border: '2px solid #000',
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
     outline: 'none',
+    overflow: 'hidden', // Prevents content from spilling out
   },
 }));

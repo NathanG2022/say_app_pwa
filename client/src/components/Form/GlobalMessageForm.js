@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { TextField, Button, Typography, Paper } from '@material-ui/core';
-import { useDispatch, useSelector } from 'react-redux';
-import { sendMessage, getMessages, getUsers } from '../../api';
+import { sendMessage, getMessages } from '../../api';
 import useStyles from './styles';
 
 function combineMessages(messages) {
@@ -35,12 +34,12 @@ const MessageComponent = ({ message }) => (
 );
 
 const GlobalMessageForm = () => {
+  // const [oldMessageNumber, setOldMessageNumber] = useState(0);
+  // const dispatch = useDispatch();
+  // const [numberofMessages, setNumberofMessages] = useState(0);
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
-  const [oldMessageNumber, setOldMessageNumber] = useState(0);
   const [loading, setLoading] = useState(false); // Track loading status
-  const [numberofMessages, setNumberofMessages] = useState(0);
-  const dispatch = useDispatch();
   const classes = useStyles();
   const messagesRef = useRef(null);
 

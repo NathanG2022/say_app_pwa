@@ -11,7 +11,7 @@ import Form from '../Form/Form';
 import Pagination from '../Pagination';
 import useStyles from './styles';
 import MessageCenterForm from '../Form/MessageCenterForm';
-import WebSocket from 'ws';
+
 function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
@@ -91,7 +91,7 @@ const Home = () => {
             )}
           </Grid>
         </Grid>
-				<Modal
+		<Modal
         	open={open}
         	onClose={handleClose}
         	closeAfterTransition
