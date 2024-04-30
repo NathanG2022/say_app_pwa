@@ -28,13 +28,16 @@ export default makeStyles((theme) => ({
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: 'auto', // Adjust width based on screen size
-    maxWidth: '90%', // Ensures that modal does not exceed the screen width
-    backgroundColor: theme.palette.background.paper,
-    border: '2px solid #000',
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3),
-    outline: 'none',
-    overflow: 'hidden', // Prevents content from spilling out
+    width: '80%', // Responsive width
+    maxHeight: '80vh', // Limits height on smaller screens
+    overflowY: 'auto', // Allows scrolling within the modal if content is too tall
+    backgroundColor: theme.palette.background.paper, // Uses theme for background
+    boxShadow: theme.shadows[5], // Uses theme for shadow
+    padding: theme.spacing(2, 4, 3), // Standard spacing
+    [theme.breakpoints.down('xs')]: {
+      width: '95%', // Increased width for extra small devices
+      maxHeight: '90vh', // Slightly more height for very small screens
+      padding: theme.spacing(2), // Reduced padding on smaller screens
+    },
   },
 }));

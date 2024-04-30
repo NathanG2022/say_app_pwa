@@ -1,5 +1,4 @@
 import UserModal from "../models/user.js";
-import mongoose from "mongoose";
 import express from "express";
 import DirectMessage from "../models/directmessages.js";
 const router = express.Router();
@@ -24,16 +23,16 @@ export const createDirectMessage = async (req, res) => {
     const output = Object.values(text).join('');
     const receiver = await UserModal.findById(receiverId);
     const author1 = await UserModal.findById(req.userId);
+    const formatDate = new Date();
+    const newMessage = new DirectMessage({
+        author: author1,
+        recipient: receiver,
+        content: output,
+        userName: author1.name,
+        date: formatDate 
+    });
     try {
-        const newMessage = new DirectMessage({
-            author: author1,
-            recipient: receiver,
-            content: output,
-            userName: author1.name,
-        });
-
         await newMessage.save();
-
         res.status(201).json(newMessage);
     } catch (error) {
         res.status(500).json({ error: error.toString() });
