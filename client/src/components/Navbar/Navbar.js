@@ -42,7 +42,7 @@ const Navbar = () => {
     if (tokenCheck && tokenCheck.token !== user?.token) {
       setUser(tokenCheck);
     }
-  }, [location, logout, user?.token]); // Ensure using optional chaining here
+  }, [location, logout]); // Ensure using optional chaining here
 
   return (
     <AppBar className={classes.appBar} position="static" color="inherit">
