@@ -1,6 +1,4 @@
 import express from 'express';
-import mongoose from 'mongoose';
-
 import Message from '../models/messages.js';
 import UserModal from '../models/user.js';
 
@@ -36,10 +34,16 @@ export const sendMessage = async (req, res) => {
     const message = req.body;
     const output = Object.values(message).join('');
     const user = await UserModal.findById(req.userId);
-    const newMessage = new Message({...message,  content: output, author: req.userId, date: new Date().toISOString(), userName: user.name});
+    const formatDate = new Date();
+    const newMessage = new Message({
+        ...message,  
+        content: output, 
+        author: req.userId, 
+        date: formatDate, 
+        userName: user.name
+    });
     try {
         await newMessage.save();
-
         res.status(201).json(newMessage);
     } catch (error) {
         res.status(409).json({ message: error.message });

@@ -106,7 +106,7 @@ const Home = () => {
               	<CloseIcon />
             	</IconButton>
 							{/* post.creator*/}
-            	<MessageCenterForm receiverId={null} handleClose={handleClose} />
+            	<MessageCenterForm handleClose={handleClose} />
           	</div>
         	</Fade>
       	</Modal>
