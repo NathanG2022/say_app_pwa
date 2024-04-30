@@ -16,7 +16,6 @@ const Navbar = () => {
   const history = useHistory();
   const classes = useStyles();
 
-  // Wrap the logout function with useCallback
   const logout = useCallback(() => {
     dispatch({ type: actionType.LOGOUT });
 
@@ -35,14 +34,15 @@ const Navbar = () => {
     if (token) {
       const decodedToken = decode(token);
 
-      // if the token is expired, perform logout
       if (decodedToken.exp * 1000 < new Date().getTime()) logout();
     }
 
-    setUser(JSON.parse(localStorage.getItem('profile')));
-
-    // Ensure to listen to changes in location and logout function
-  }, [location, logout, user.token]);
+    // Set user on every location change
+    const tokenCheck = JSON.parse(localStorage.getItem('profile'));
+    if (tokenCheck && tokenCheck.token !== user?.token) {
+      setUser(tokenCheck);
+    }
+  }, [location, logout, user?.token]); // Ensure using optional chaining here
 
   return (
     <AppBar className={classes.appBar} position="static" color="inherit">
