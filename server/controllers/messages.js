@@ -50,26 +50,4 @@ export const sendMessage = async (req, res) => {
     }
 }
 
-export const getUsers = async (req, res) => {
-  //return all user profile
-  if (!req.userId) return res.json({ message: "Unauthenticated" });
-  try {
-    const users = await UserModal.find();
-    //remove the password and email from the user profile
-    users.forEach((user) => {
-      user.password = undefined;
-      user.email = undefined;
-      user.friends = undefined;
-      if(user._id == req.userId) {
-        //remove the user from the list of users
-        users.splice(users.indexOf(user), 1);
-      }
-    });
-    res.status(200).json(users);
-  }
-  catch (error) {
-    res.status(404).json({ message: error.message });
-  }
-};
-
 export default router;

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { TextField, Button, Paper, Select, MenuItem, InputLabel, FormControl, Grid } from '@material-ui/core';
+import { TextField, Button, Select, MenuItem, InputLabel, FormControl, Grid, Paper } from '@material-ui/core';
 import useStyles from './styles';
 import { sendDirectMessage, getUsers, fetchDirectMessages } from '../../api';
 
@@ -11,6 +11,9 @@ const DirectMessageForm = () => {
 	const [directMessage, setDirectMessage] = useState('');
 	const [recipient, setRecipient] = useState('');
 	const [users, setUsers] = useState([]);
+	const handleChange = (event) => {
+		setSelectedUser(event.target.value);
+	};
 
 	useEffect(() => {
 		const fetchUsers = async () => {
@@ -23,7 +26,7 @@ const DirectMessageForm = () => {
 		};
 
 		// Fetch users every 10 seconds
-		const interval = setInterval(fetchUsers, 10000); // Fetch users every 10 seconds
+		setInterval(fetchUsers, 10000); // Fetch users every 10 seconds
 
 		if (!loading) {
 			const getDirectMessages = async () => {
@@ -66,20 +69,35 @@ const DirectMessageForm = () => {
 	return (
 		<div>
 			<div className={classes.messagesContainer} >
-					{Object.entries(messages).map(([authorId, { userName, messages }]) => (
-						<div key={authorId}>
-							<button onClick={() => setSelectedUser(authorId)} variant="contained" color="primary" size="large" type="submit" fullWidth>{userName}</button>
-							{selectedUser === authorId && messages.map((message, index) => (
-								<p key={index}>{message.date}: {message.content}</p>
-							))}
+			<Paper className={classes.paper}>
+				<FormControl fullWidth>
+					<InputLabel id="user-select-label">Select DM Sender</InputLabel>
+					<Select
+						labelId="user-select-label"
+						value={selectedUser}
+						onChange={handleChange}
+						displayEmpty
+						fullWidth
+					>
+						{Object.entries(messages).map(([authorId, { userName }]) => (
+							<MenuItem key={authorId} value={authorId}>
+								{userName}
+							</MenuItem>
+						))}
+					</Select>
+					{selectedUser && messages[selectedUser]?.messages.map((message, index) => (
+						<div key={index}>
+							<p>{message.date}: {message.content}</p>
 						</div>
 					))}
+				</FormControl>
+				</Paper>
 			</div>
 			<form autoComplete="off" noValidate className={`${classes.root} ${classes.form}`} onSubmit={handleSubmit}>
 				<div className={classes.users}>
 					<Grid container alignItems="center" spacing={2}>
 						<Grid item>
-							<InputLabel htmlFor="recipient-select">Select a recipient</InputLabel>
+							<InputLabel htmlFor="recipient-select">Select DM recipient</InputLabel>
 						</Grid>
 						<Grid item xs>
 							<FormControl fullWidth>

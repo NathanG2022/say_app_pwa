@@ -1,5 +1,5 @@
 const Conversation = require("../models/conversation");
-const chatUpdates = require("./updates/messages");
+const updateChatHistory = require("./updates/updateChatHistory");
 
 const directChatHistoryHandler = async (socket, data) => {
   try {
@@ -12,7 +12,7 @@ const directChatHistoryHandler = async (socket, data) => {
     });
 
     if (conversation) {
-      chatUpdates.updateChatHistory(conversation._id.toString(), socket.id);
+      updateChatHistory(conversation._id.toString(), socket.id);
     }
   } catch (error) {
     console.log(error);

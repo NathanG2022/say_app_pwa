@@ -44,4 +44,4 @@ const updateChatHistory = async (
   }
 };
 
-module.exports = { updateChatHistory };
+module.exports =  updateChatHistory;
