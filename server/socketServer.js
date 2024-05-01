@@ -2,6 +2,7 @@ import authSocket from "./middleware/authSocket.js";
 import serverStore from "./serverStore.js";
 import newConnectionHandler from "./socketHandlers/newConnectionHandler";
 import directMessageHandler from "./socketHandlers/directMessageHandler";
+import directChatHistoryHandler from "./socketHandlers/directChatHistoryHandler";
 
 const registerSocketServer = (server) => {
     const io = require("socket.io")(server, {
