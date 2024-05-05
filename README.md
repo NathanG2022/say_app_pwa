@@ -8,3 +8,5 @@ FE: https://comfy-khapse-d1e0f6.netlify.app/
 BE: https://sayapp.herokuapp.com/
 DB: mongodb+srv://dbadmin:<password>@cluster0.oqvj95y.mongodb.net/?retryWrites=true&w=majority
 Google Auth: https://console.cloud.google.com/apis/credentials?project=mern-say-app
+
+Test text added by Sam
