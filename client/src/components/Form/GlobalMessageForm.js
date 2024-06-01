@@ -58,7 +58,7 @@ const GlobalMessageForm = () => {
 				}
 			};
 
-			// Fetch messages every 50 seconds
+			// Fetch messages every 5 seconds
 			const interval = setInterval(fetchMessages, 5000);
 
 			return () => {

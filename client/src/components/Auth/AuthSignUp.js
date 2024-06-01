@@ -34,6 +34,9 @@ const AuthSignUp = () => {
     let newerror;
     if (isSignup) {
       newerror = await dispatch(signup(form, history));
+      if (!newerror) {
+        history.push('/tos'); // Redirect to Terms of Service after successful sign-up
+      }
     } else {
       newerror = await dispatch(signin(form, history));
     }
@@ -102,7 +105,10 @@ const AuthSignUp = () => {
           /> */}
           <Grid container justifyContent="flex-end">
             <Grid item>
-              <Button onClick={switchMode}>
+              <Button 
+                onClick={switchMode}
+                style={{ textDecoration: 'underline', color: 'blue' }}
+              >
                 { isSignup ? 'Already have an account? Sign in' : "Don't have an account? Sign Up" }
               </Button>
             </Grid>

@@ -9,13 +9,13 @@ import useStyles from './styles';
 
 const Form = ({ currentId, setCurrentId }) => {
   const [postData, setPostData] = useState({ title: '', message: '', tags: [], selectedFile: '' });
+  const [chipInputValue, setChipInputValue] = useState('');
   const post = useSelector((state) => (currentId ? state.posts.posts.find((message) => message._id === currentId) : null));
   const dispatch = useDispatch();
   const classes = useStyles();
   const user = JSON.parse(localStorage.getItem('profile'));
   const history = useHistory();
 
-  // Using useCallback to memoize the clear function
   const clear = useCallback(() => {
     setCurrentId(0);
     setPostData({ title: '', message: '', tags: [], selectedFile: '' });
@@ -24,16 +24,38 @@ const Form = ({ currentId, setCurrentId }) => {
   useEffect(() => {
     if (!post?.title) clear();
     if (post) setPostData(post);
-  }, [post, clear]);  // clear is now stable and won't cause re-runs unless necessary
+  }, [post, clear]);
+
+  const handleAddChip = (tag) => {
+    setPostData((prevPostData) => ({
+      ...prevPostData,
+      tags: [...prevPostData.tags, tag],
+    }));
+    setChipInputValue('');
+  };
+
+  const handleDeleteChip = (chipToDelete) => {
+    setPostData((prevPostData) => ({
+      ...prevPostData,
+      tags: prevPostData.tags.filter((tag) => tag !== chipToDelete),
+    }));
+  };
+
+  const handleBlur = () => {
+    if (chipInputValue) {
+      handleAddChip(chipInputValue);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log('Submitting postData:', postData);
 
     if (currentId === 0) {
-      dispatch(createPost({ ...postData, name: user?.result?.name }, history));
+      await dispatch(createPost({ ...postData, name: user?.result?.name }, history));
       clear();
     } else {
-      dispatch(updatePost(currentId, { ...postData, name: user?.result?.name }));
+      await dispatch(updatePost(currentId, { ...postData, name: user?.result?.name }));
       clear();
     }
   };
@@ -48,18 +70,10 @@ const Form = ({ currentId, setCurrentId }) => {
     );
   }
 
-  const handleAddChip = (tag) => {
-    setPostData({ ...postData, tags: [...postData.tags, tag] });
-  };
-
-  const handleDeleteChip = (chipToDelete) => {
-    setPostData({ ...postData, tags: postData.tags.filter((tag) => tag !== chipToDelete) });
-  };
-
   return (
     <Paper className={classes.paper} elevation={6}>
       <form autoComplete="off" noValidate className={`${classes.root} ${classes.form}`} onSubmit={handleSubmit}>
-        <Typography variant="h6">{currentId ? `Editing "${post?.title}"` : 'Creating a Connect'}</Typography>
+        <Typography variant="h6">{currentId ? `Editing "${post?.title}"` : 'Create a Connect'}</Typography>
         <TextField name="title" variant="outlined" label="Title" fullWidth value={postData.title} onChange={(e) => setPostData({ ...postData, title: e.target.value })} />
         <TextField name="message" variant="outlined" label="Message" fullWidth multiline rows={4} value={postData.message} onChange={(e) => setPostData({ ...postData, message: e.target.value })} />
         <div style={{ padding: '5px 0', width: '94%' }}>
@@ -71,6 +85,9 @@ const Form = ({ currentId, setCurrentId }) => {
             value={postData.tags}
             onAdd={(chip) => handleAddChip(chip)}
             onDelete={(chip) => handleDeleteChip(chip)}
+            onUpdateInput={(e) => setChipInputValue(e.target.value)}
+            onBlur={handleBlur}
+            key={postData.tags.join(',')} // Ensure re-render if tags change
           />
         </div>
         <div className={classes.fileInput}><FileBase type="file" multiple={false} onDone={({ base64 }) => setPostData({ ...postData, selectedFile: base64 })} /></div>

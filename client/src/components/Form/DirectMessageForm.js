@@ -25,8 +25,8 @@ const DirectMessageForm = () => {
 			}
 		};
 
-		// Fetch users every 10 seconds
-		setInterval(fetchUsers, 10000); // Fetch users every 10 seconds
+		// Fetch users every 5 seconds
+		setInterval(fetchUsers, 5000); // Fetch users every 5 seconds
 
 		if (!loading) {
 			const getDirectMessages = async () => {
