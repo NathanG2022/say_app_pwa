@@ -32,6 +32,7 @@ app.use("/user", userRouter);
 app.use("/messages", messageRouter);
 app.use("/directmessages", directMessageRouter);
 app.get('/', (req, res) => {
+  res.setHeader('Content-Type', 'application/json');
   res.send('APP IS RUNNING');
 })
 

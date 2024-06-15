@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "org.ndempowerment.connect.pwa",
+        "sha256_cert_fingerprints": ["FD:DC:A4:5C:CA:C5:FD:D0:8F:D9:1B:61:CB:46:58:AA:71:4D:33:CA:AF:2E:07:90:0C:33:5B:63:FC:D0:2A:5D"]
+      }
+    }]

@@ -5,6 +5,12 @@ const socket = new WebSocket('wss://say-app-pwa-server-3da24f22cc4a.herokuapp.co
 // const API = axios.create({ baseURL: 'http://localhost:5000' }); // this is to use local BE
 // const socket = new WebSocket('ws://localhost:5000');
 
+// Set default headers for axios
+API.defaults.headers.post['Content-Type'] = 'application/json';
+API.defaults.headers.put['Content-Type'] = 'application/json';
+API.defaults.headers.patch['Content-Type'] = 'application/json';
+API.defaults.headers.get['Content-Type'] = 'application/json';
+
 // Event listener for when the WebSocket connection is established
 socket.addEventListener('open', () => {
   console.log('WebSocket connection established.');
